@@ -1,0 +1,19 @@
+<configuration>
+    <appender name="APP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <!-- http://logback.qos.ch/manual/layouts.html#conversionWord -->
+            <pattern>%d [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>C:/Users/Ja/Desktop/log.log</file>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+    <root level="trace">
+        <appender-ref ref="APP"/>
+        <appender-ref ref="FILE"/>
+    </root>
+    <logger name="cz.muni.fi.pv168" level="debug"></logger>
+</configuration>

@@ -1,0 +1,17 @@
+CREATE TABLE missions
+(
+  missionId BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  startDate DATE,
+  endDate DATE,
+  type VARCHAR(20) CONSTRAINT type_a CHECK (type IN ('ASSASSINATION','SABOTAGE','ABDUCTION','SURVEILLANCE'))
+);
+
+CREATE TABLE spies
+(
+  spyId BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  missionId BIGINT REFERENCES missions (missionId) ON DELETE SET NULL,
+  firstname   VARCHAR(50),
+  lastname    VARCHAR(50),
+  codename    VARCHAR(50),
+  dateofbirth DATE
+);
