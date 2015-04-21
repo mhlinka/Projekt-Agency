@@ -1,14 +1,14 @@
 package cz.muni.fi.pv168;
 
-import cz.muni.fi.pv168.backend.Mission;
-import cz.muni.fi.pv168.backend.MissionManager;
-import cz.muni.fi.pv168.backend.MissionManagerImpl;
-import cz.muni.fi.pv168.backend.MissionType;
+import cz.muni.fi.pv168.backend.entities.Mission;
+import cz.muni.fi.pv168.backend.entities.MissionManager;
+import cz.muni.fi.pv168.backend.entities.MissionManagerImpl;
+import cz.muni.fi.pv168.backend.entities.MissionType;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import utils.DBUtils;
+import cz.muni.fi.pv168.utils.DBUtils;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -27,7 +27,7 @@ public class MissionManagerImplTest
 	public void beforeTest() throws SQLException
 	{
 		BasicDataSource ds = new BasicDataSource();
-		ds.setUrl("jdbc:derby:memory:gravemgr-test;create=true");
+		ds.setUrl("jdbc:derby:memory:agencydb-test;create=true");
 		this.ds = ds;
 		this.manager = new MissionManagerImpl(ds);
 		DBUtils.executeSqlScript(ds, MissionManagerImpl.class.getResourceAsStream("/tables.sql"));

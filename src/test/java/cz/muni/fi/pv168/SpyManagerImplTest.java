@@ -1,13 +1,13 @@
 package cz.muni.fi.pv168;
 
-import cz.muni.fi.pv168.backend.Spy;
-import cz.muni.fi.pv168.backend.SpyManager;
-import cz.muni.fi.pv168.backend.SpyManagerImpl;
+import cz.muni.fi.pv168.backend.entities.Spy;
+import cz.muni.fi.pv168.backend.entities.SpyManager;
+import cz.muni.fi.pv168.backend.entities.SpyManagerImpl;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import utils.DBUtils;
+import cz.muni.fi.pv168.utils.DBUtils;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -25,7 +25,7 @@ public class SpyManagerImplTest
 	public void beforeTest() throws SQLException
 	{
 		BasicDataSource ds = new BasicDataSource();
-		ds.setUrl("jdbc:derby:memory:gravemgr-test;create=true");
+		ds.setUrl("jdbc:derby:memory:agencydb-test;create=true");
 		this.ds = ds;
 		this.manager = new SpyManagerImpl(ds);
 

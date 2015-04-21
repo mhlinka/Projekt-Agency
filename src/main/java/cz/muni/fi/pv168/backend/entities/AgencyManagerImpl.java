@@ -1,4 +1,4 @@
-package cz.muni.fi.pv168.backend;
+package cz.muni.fi.pv168.backend.entities;
 
 import cz.muni.fi.pv168.backend.ex.IllegalEntityException;
 import cz.muni.fi.pv168.backend.ex.ServiceFailureException;
@@ -10,9 +10,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.sql.DataSource;
 import java.util.List;
-
-import static cz.muni.fi.pv168.backend.MissionManagerImpl.missionMapper;
-import static cz.muni.fi.pv168.backend.SpyManagerImpl.spyMapper;
 
 /**
  * Created by FH on 27.2.2015.
@@ -62,7 +59,7 @@ public class AgencyManagerImpl implements AgencyManager
         List<Mission> mission = jdbc.query(
                 "SELECT missions.missionId, startDate, endDate, type " +
                         "FROM missions JOIN spies ON missions.missionId = spies.missionId " +
-                        "WHERE spies.spyId = ?", missionMapper, spy.getSpyId());
+                        "WHERE spies.spyId = ?", MissionManagerImpl.missionMapper, spy.getSpyId());
         return mission.isEmpty() ? null : mission.get(0);
     }
 
@@ -75,13 +72,13 @@ public class AgencyManagerImpl implements AgencyManager
         return jdbc.query(
                 "SELECT spyId, firstname, lastname, codename, dateofbirth " +
                         "FROM spies JOIN missions ON missions.missionId = spies.missionId " +
-                        "WHERE missions.missionId = ?", spyMapper, mission.getMissionId());
+                        "WHERE missions.missionId = ?", SpyManagerImpl.spyMapper, mission.getMissionId());
     }
 
     @Override
     public List<Spy> listUnassignedSpies() throws ServiceFailureException {
         log.debug("listUnassignedSpies()");
-        return jdbc.query("SELECT spyId, firstname, lastname, codename, dateofbirth FROM SPIES WHERE missionId IS NULL", spyMapper);
+        return jdbc.query("SELECT spyId, firstname, lastname, codename, dateofbirth FROM SPIES WHERE missionId IS NULL", SpyManagerImpl.spyMapper);
     }
 
     private void validateSpyAndMission(Spy spy, Mission mission) throws IllegalEntityException

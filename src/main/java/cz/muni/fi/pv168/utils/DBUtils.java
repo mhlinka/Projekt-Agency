@@ -1,4 +1,4 @@
-package utils;
+package cz.muni.fi.pv168.utils;
 
 import javax.sql.DataSource;
 import java.io.IOException;
