@@ -16,12 +16,13 @@ import java.util.List;
  */
 public class AgencyManagerImpl implements AgencyManager
 {
-    // no rowmapper apparently
-
     private final static Logger log = LoggerFactory.getLogger(AgencyManagerImpl.class);
 
     private final JdbcTemplate jdbc;
     private final TransactionTemplate transaction;
+
+    private MissionManager missionManager;
+    private SpyManager spyManager;
 
     public AgencyManagerImpl(DataSource dataSource)
     {
@@ -97,5 +98,25 @@ public class AgencyManagerImpl implements AgencyManager
     {
         if (mission == null) throw new IllegalEntityException("The mission is null.");
         if (mission.getMissionId() == null) throw new IllegalEntityException("The mission's id is null.");
+    }
+
+    public void setSpyManager(SpyManager spyManager)
+    {
+        this.spyManager = spyManager;
+    }
+
+    public void setMissionManager(MissionManager missionManager)
+    {
+        this.missionManager = missionManager;
+    }
+
+    public MissionManager getMissionManager()
+    {
+        return missionManager;
+    }
+
+    public SpyManager getSpyManager()
+    {
+        return spyManager;
     }
 }

@@ -1,0 +1,30 @@
+#left
+{
+    width: 20%;
+    float:left;
+    border:2px solid green;
+}
+#site{
+    background-color: white;
+    border:1px solid black;
+    min-height: 800px;
+}
+.errorMsg
+{
+    border: solid 1px red;
+    background-color: yellow;
+    padding: 10px;
+}
+body{
+    margin:0 auto;
+    width: 750px;
+    border:1px solid black;
+    padding:10px;
+    background-color: #f7f0da;
+}
+
+#content
+{
+    margin-left:21%;
+    width:400px;
+}

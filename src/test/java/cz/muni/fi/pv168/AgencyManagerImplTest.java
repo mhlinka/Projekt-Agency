@@ -9,7 +9,6 @@ import org.junit.Test;
 import cz.muni.fi.pv168.utils.DBUtils;
 
 import javax.sql.DataSource;
-//import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -40,8 +39,6 @@ public class AgencyManagerImplTest
 	public void dropTables() throws SQLException, NullPointerException
 	{
 		DBUtils.executeSqlScript(ds, MissionManagerImpl.class.getResourceAsStream("/droptables.sql"));
-		//DBUtils.executeSqlScript(ds, SpyManagerImpl.class.getResourceAsStream("droptables.sql"));
-		//DBUtils.executeSqlScript(ds, AgencyManagerImpl.class.getResourceAsStream("droptables.sql"));
 	}
 	@Test
 	public void testAddSpyToMission()

@@ -1,6 +1,6 @@
 package cz.muni.fi.pv168.backend.entities;
 
-import cz.muni.fi.pv168.backend.ex.IllegalEntityException;
+import cz.muni.fi.pv168.backend.ex.MissionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -90,7 +90,7 @@ public class MissionManagerImpl implements MissionManager
 				mission.getMissionId());
 		if (updatedCount != 1)
 		{
-			throw new IllegalEntityException("Update for mission " + mission.getMissionId() + " failed.");
+			throw new MissionException("Update for mission " + mission.getMissionId() + " failed.");
 		}
 		//
 		log.trace("mission is {}", mission.getMissionId());
@@ -107,7 +107,7 @@ public class MissionManagerImpl implements MissionManager
 
 		if (deletedCount != 1)
 		{
-			throw new IllegalEntityException("Could not delete mission " + mission.getMissionId());
+			throw new MissionException("Could not delete mission " + mission.getMissionId());
 		}
 
 		log.trace("mission id is {}", mission.getMissionId());
