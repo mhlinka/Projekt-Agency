@@ -5,6 +5,8 @@
 </title>
 <body>
 <a href="/missions/">Missions</a>
+<br/>
+<a href="/spies/">Spies</a>
 </body>
 
 
