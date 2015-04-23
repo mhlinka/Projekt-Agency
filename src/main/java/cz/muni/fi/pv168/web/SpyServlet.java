@@ -120,10 +120,8 @@ public class SpyServlet extends HttpServlet
         String dateOfBirthStr;
         String codename;
 
-        System.out.println(1);
         if(request.getParameter("doUpdate") != null)
         {
-            System.out.println(2);
             firstName = request.getParameter("firstName");
             lastName = request.getParameter("lastName");
             dateOfBirthStr = request.getParameter("dateOfBirth");
@@ -132,7 +130,6 @@ public class SpyServlet extends HttpServlet
             try {
                 try
                 {
-                    System.out.println(3);
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                     Date dateOfBirth = df.parse(dateOfBirthStr);
 
@@ -153,11 +150,10 @@ public class SpyServlet extends HttpServlet
                 return;
             }
         }
-        else //display values for update
+        else
         {
             Long id = Long.valueOf(request.getParameter("id"));
             Spy spy = getSpyManager().findSpyById(id);
-            System.out.println("HERE!");
             request.setAttribute("spyId", spy.getSpyId());
             request.setAttribute("firstName", spy.getFirstName());
             request.setAttribute("lastName",spy.getLastName());
