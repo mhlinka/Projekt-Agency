@@ -21,18 +21,17 @@ public class SpringConfig {
 	public DataSource dataSource() {
 		return new EmbeddedDatabaseBuilder()
 				.setType(DERBY)
-				//.addScript("droptables.sql")
 				.addScript("tables.sql")
 				.addScript("test-data.sql")
 				.build();
 	}
 
-	@Bean //potřeba pro @EnableTransactionManagement
+	@Bean
 	public PlatformTransactionManager transactionManager() {
 		return new DataSourceTransactionManager(dataSource());
 	}
 
-	@Bean //náš manager, bude obalen řízením transakcí
+	@Bean
 	public SpyManager spyManager() {
 		return new SpyManagerImpl(dataSource());
 	}

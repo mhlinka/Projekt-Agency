@@ -1,7 +1,6 @@
 package cz.muni.fi.pv168.backend.entities;
 
 import cz.muni.fi.pv168.backend.ex.IllegalEntityException;
-import cz.muni.fi.pv168.backend.ex.ServiceFailureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -79,7 +78,7 @@ public class SpyManagerImpl implements SpyManager
 	}
 
 	@Override
-	public void updateSpy(Spy spy) throws ServiceFailureException
+	public void updateSpy(Spy spy)
 	{
 		log.debug("updateSpy({})", spy);
 		validateSpy(spy);
@@ -96,7 +95,7 @@ public class SpyManagerImpl implements SpyManager
 	}
 
 	@Override
-	public Spy findSpyById(Long id) throws ServiceFailureException
+	public Spy findSpyById(Long id)
 	{
 		validateId(id);
 
@@ -109,7 +108,7 @@ public class SpyManagerImpl implements SpyManager
 	}
 
 	@Override
-	public List<Spy> listSpies() throws ServiceFailureException
+	public List<Spy> listSpies()
 	{
 		log.debug("listSpies({})");
 		return jdbc.query("SELECT spyid, firstname, lastname, dateofbirth, codename FROM SPIES", spyMapper);

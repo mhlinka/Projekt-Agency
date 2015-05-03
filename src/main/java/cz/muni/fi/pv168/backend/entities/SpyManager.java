@@ -1,7 +1,5 @@
 package cz.muni.fi.pv168.backend.entities;
 
-import cz.muni.fi.pv168.backend.ex.ServiceFailureException;
-
 import java.util.List;
 
 /**
@@ -9,14 +7,14 @@ import java.util.List;
  */
 public interface SpyManager
 {
-	void addSpy(Spy spy) throws ServiceFailureException, IllegalArgumentException;
+	void addSpy(Spy spy) throws  IllegalArgumentException;
 
-	void removeSpy(Spy spy) throws ServiceFailureException, IllegalArgumentException;
+	void removeSpy(Spy spy) throws  IllegalArgumentException;
 
-	void removeSpy(Long id) throws ServiceFailureException, IllegalArgumentException;
+	void removeSpy(Long id) throws  IllegalArgumentException;
 
-	void updateSpy(Spy spy) throws ServiceFailureException, IllegalArgumentException;
+	void updateSpy(Spy spy) throws  IllegalArgumentException;
 
-	Spy findSpyById(Long id) throws ServiceFailureException, IllegalArgumentException;
-	List<Spy> listSpies() throws ServiceFailureException;
+	Spy findSpyById(Long id) throws  IllegalArgumentException;
+	List<Spy> listSpies();
 }

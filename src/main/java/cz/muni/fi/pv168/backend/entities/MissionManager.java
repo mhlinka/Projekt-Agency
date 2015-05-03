@@ -1,7 +1,4 @@
 package cz.muni.fi.pv168.backend.entities;
-
-import cz.muni.fi.pv168.backend.ex.ServiceFailureException;
-
 import java.util.List;
 
 /**
@@ -9,12 +6,12 @@ import java.util.List;
  */
 public interface MissionManager
 {
-	void createMission(Mission mission) throws ServiceFailureException;
-	Mission getMissionById(Long id) throws ServiceFailureException;
-	List<Mission> getAllMissions() throws  ServiceFailureException;
+	void createMission(Mission mission);
+	Mission getMissionById(Long id);
+	List<Mission> getAllMissions();
 
-	List<Mission> getMissionsOfType(MissionType type) throws ServiceFailureException;
-	void updateMission(Mission mission) throws  ServiceFailureException;
-	void deleteMission(Mission mission) throws ServiceFailureException;
+	List<Mission> getMissionsOfType(MissionType type);
+	void updateMission(Mission mission);
+	void deleteMission(Mission mission);
 
 }

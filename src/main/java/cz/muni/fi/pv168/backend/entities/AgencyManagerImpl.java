@@ -1,7 +1,6 @@
 package cz.muni.fi.pv168.backend.entities;
 
 import cz.muni.fi.pv168.backend.ex.IllegalEntityException;
-import cz.muni.fi.pv168.backend.ex.ServiceFailureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,7 +30,7 @@ public class AgencyManagerImpl implements AgencyManager
     }
 
     @Override
-    public void addSpyToMission(Spy spy, Mission mission) throws ServiceFailureException, IllegalEntityException
+    public void addSpyToMission(Spy spy, Mission mission)throws IllegalEntityException
     {
         validateSpyAndMission(spy, mission);
 
@@ -44,7 +43,7 @@ public class AgencyManagerImpl implements AgencyManager
     }
 
     @Override
-    public void removeSpyFromMission(Spy spy, Mission mission) throws ServiceFailureException, IllegalEntityException
+    public void removeSpyFromMission(Spy spy, Mission mission)throws IllegalEntityException
     {
         validateSpyAndMission(spy, mission);
         int n = jdbc.update("UPDATE SPIES SET spies.missionId = NULL WHERE spyId = ? AND spies.missionId = ?", spy.getSpyId(), mission.getMissionId());
@@ -52,7 +51,7 @@ public class AgencyManagerImpl implements AgencyManager
     }
 
     @Override
-    public Mission findMissionWithSpy(Spy spy) throws ServiceFailureException,IllegalEntityException
+    public Mission findMissionWithSpy(Spy spy) throws IllegalEntityException
     {
         log.debug("findMissionWithSpy({})", spy);
         validateSpy(spy);
@@ -65,7 +64,7 @@ public class AgencyManagerImpl implements AgencyManager
     }
 
     @Override
-    public List<Spy> findSpiesOnMission(Mission mission) throws ServiceFailureException,IllegalEntityException
+    public List<Spy> findSpiesOnMission(Mission mission) throws IllegalEntityException
     {
         log.debug("findSpiesOnMission({})", mission);
         validateMission(mission);
@@ -77,7 +76,7 @@ public class AgencyManagerImpl implements AgencyManager
     }
 
     @Override
-    public List<Spy> listUnassignedSpies() throws ServiceFailureException {
+    public List<Spy> listUnassignedSpies()  {
         log.debug("listUnassignedSpies()");
         return jdbc.query("SELECT spyId, firstname, lastname, codename, dateofbirth FROM SPIES WHERE missionId IS NULL", SpyManagerImpl.spyMapper);
     }

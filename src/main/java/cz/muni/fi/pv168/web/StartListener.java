@@ -1,6 +1,7 @@
 package cz.muni.fi.pv168.web;
 
 import cz.muni.fi.pv168.backend.SpringConfig;
+import cz.muni.fi.pv168.backend.entities.AgencyManager;
 import cz.muni.fi.pv168.backend.entities.MissionManager;
 import cz.muni.fi.pv168.backend.entities.SpyManager;
 import org.springframework.context.ApplicationContext;
@@ -27,6 +28,7 @@ public class StartListener implements ServletContextListener
 		ApplicationContext springContext = new AnnotationConfigApplicationContext(SpringConfig.class);
 		servletContext.setAttribute("spyManager", springContext.getBean("spyManager", SpyManager.class));
 		servletContext.setAttribute("missionManager", springContext.getBean("missionManager", MissionManager.class));
+		servletContext.setAttribute("agencyManager",springContext.getBean("agencyManager", AgencyManager.class));
 	}
 
 	@Override

@@ -14,13 +14,14 @@ public class TestFilter implements Filter
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
-		System.out.println("filter inicializován");
+		System.out.println("Filter initialized successfully.");
 	}
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException
 	{
-		System.out.println("Request!");
+		req.setCharacterEncoding("UTF-8");
+		res.setCharacterEncoding("UTF-8");
 		Enumeration<String> attributeNames = req.getAttributeNames();
 		while (attributeNames.hasMoreElements())
 		{
