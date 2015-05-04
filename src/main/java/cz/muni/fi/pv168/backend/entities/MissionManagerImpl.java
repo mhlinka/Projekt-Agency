@@ -17,7 +17,8 @@ import java.util.Map;
  */
 public class MissionManagerImpl implements MissionManager
 {
-	public static final RowMapper<Mission> missionMapper = (rs, rowNum) ->
+
+    public static final RowMapper<Mission> missionMapper = (rs, rowNum) ->
 	{
 		MissionType missionType = rs.getString("type") == null ? null : MissionType.valueOf(rs.getString("type"));
 		return new Mission(rs.getLong("missionId"), rs.getDate("startdate"), rs.getDate("endDate"), missionType);
