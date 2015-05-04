@@ -19,7 +19,6 @@ import javax.servlet.annotation.WebListener;
 @WebListener
 public class StartListener implements ServletContextListener
 {
-
 	@Override
 	public void contextInitialized(ServletContextEvent event)
 	{

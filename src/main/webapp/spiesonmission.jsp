@@ -30,15 +30,15 @@
                     <td>
                         <form style="display:inline" method="post"
                               action="${pageContext.request.contextPath}/spies/update?id=${spy.spyId}">
-                            <input type="submit" value="Update" class="btn-link"></form>
+                            <input type="submit" value="${web_UpdateButtonText}" class="btn-link"></form>
                         |
                         <form style="display:inline" method="post"
                               action="${pageContext.request.contextPath}/spies/delete?id=${spy.spyId}">
-                            <input type="submit" value="Delete" class="btn-link"></form>
+                            <input type="submit" value="${web_DeleteButtonText}" class="btn-link"></form>
                         |
                         <form style="display:inline" method="post"
                               action="${pageContext.request.contextPath}/spies/removeFromMission?spyId=${spy.spyId}">
-                            <input type="submit" value="Cancel mission" class="btn-link"></form>
+                            <input type="submit" value="${web_CancelMissionButtonText}" class="btn-link"></form>
                     </td>
                 </tr>
             </c:forEach>
@@ -46,7 +46,7 @@
         </table>
         </c:if>
         <c:if test="${empty spies}">
-            <h3>There's nobody here.</h3>
+            <h3>${web_spiesOnMissionEmpty}</h3>
         </c:if>
 </div>
     </div>

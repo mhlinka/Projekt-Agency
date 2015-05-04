@@ -30,7 +30,7 @@ public class Spy
 	@Override
 	public int hashCode()
 	{
-		int result = Long.valueOf(spyId).hashCode();
+		int result = spyId.hashCode();
 		result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
 		result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
 		result = 31 * result + (dateOfBirth != null ? dateOfBirth.hashCode() : 0);
