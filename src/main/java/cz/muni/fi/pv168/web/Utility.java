@@ -21,4 +21,17 @@ public class Utility
 			request.setAttribute(s.toString(),bundle.getString(s));
 		}
 	}
+	public static String getEnumStringFromTranslatedValue(String missionTypeStr)
+	{
+		Locale locale = Locale.getDefault();
+		ResourceBundle enums = ResourceBundle.getBundle("MissionTypes", locale);
+		for(String key:enums.keySet())
+		{
+			if(enums.getString(key).equals(missionTypeStr))
+			{
+				return key;
+			}
+		}
+		return null;
+	}
 }

@@ -13,6 +13,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Created by Michal on 5/3/2015.
@@ -27,11 +29,11 @@ public class MissionsMan {
     private JButton createMissionButton;
     private JButton showAllMissionsButton;
     private JButton getMissionByTypeButton;
-    private JComboBox comboBox8;
+    private JComboBox missionTypeSelect;
 
     private MissionManager manager;
     private static Logger log = LoggerFactory.getLogger(MissionsMan.class);
-
+	private static ResourceBundle bundle = ResourceBundle.getBundle("MissionsMan", Locale.getDefault());
     public MissionsMan() {
         table1.setModel(new MissionsTableModel());
         table1.setDefaultRenderer(Color.class, new ColorCellRenderer());
@@ -40,6 +42,7 @@ public class MissionsMan {
             typeComboBox.addItem(type);
         }
         MissionsTableModel missionsModel = (MissionsTableModel) table1.getModel();
+		Shared.AddMissionTypes(missionTypeSelect);
         table1.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(typeComboBox));
 
         BasicDataSource ds = new BasicDataSource();
@@ -77,7 +80,7 @@ public class MissionsMan {
                 manager = new MissionManagerImpl(ds);
                 Mission mission = new Mission();
                 JFrame iFrame = new JFrame();
-                iFrame.setTitle("Add mission");
+                iFrame.setTitle(bundle.getString("AddMission"));
                 iFrame.add(new AddMission(mission,missionsModel,iFrame).getTopPanel());
                 iFrame.setContentPane(new AddMission(mission,missionsModel,iFrame).getTopPanel());
                 iFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -93,11 +96,11 @@ public class MissionsMan {
             public void actionPerformed(ActionEvent e) {
                 log.debug("deleteMissionButton({})");
                 JFrame frame = new JFrame();
-                Object[] options = {"Yes",
-                        "No"};
+                Object[] options = {bundle.getString("Yes"),
+                        bundle.getString("No")};
                 int n = JOptionPane.showOptionDialog(frame,
-                        "Do you really want to delete these missions?",
-                        "Mission Delete",
+                        bundle.getString("ReallyDelete"),
+                        bundle.getString("DeleteMission"),
                         JOptionPane.YES_OPTION,
                         JOptionPane.NO_OPTION,
                         null,
@@ -127,13 +130,13 @@ public class MissionsMan {
                 int[] rows = table1.getSelectedRows();
                 if(rows.length != 1)
                 {
-                    JOptionPane.showMessageDialog(frame,"You need to select one mission");
+                    JOptionPane.showMessageDialog(frame,bundle.getString("e_SelectOne"));
                     return;
                 }
                 int row = table1.getSelectedRow();
                 Mission mission = manager.getMissionById((Long) table1.getValueAt(row,0));
                 JFrame iFrame = new JFrame();
-                iFrame.setTitle("Update mission");
+                iFrame.setTitle(bundle.getString("UpdateMission"));
                 iFrame.add(new UpdateMission(mission,missionsModel,iFrame,table1).getTopPanel());
                 iFrame.setContentPane(new UpdateMission(mission,missionsModel,iFrame,table1).getTopPanel());
                 iFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -152,7 +155,7 @@ public class MissionsMan {
                     if(textField1.getText().equals(""))
                     {
                         JFrame frame = new JFrame();
-                        JOptionPane.showMessageDialog(frame,"The field next to 'Get mission by ID' must be filled.");
+                        JOptionPane.showMessageDialog(frame,bundle.getString("IdMustBeFilled"));
                         return;
                     }
                     Long id = Long.parseLong(textField1.getText());
@@ -160,7 +163,7 @@ public class MissionsMan {
                     if(mission == null)
                     {
                         JFrame frame = new JFrame();
-                        JOptionPane.showMessageDialog(frame,"No mission with this ID in database.");
+                        JOptionPane.showMessageDialog(frame,bundle.getString("NoSuchMission"));
                         return;
                     } else {
                         int rowCount = table1.getRowCount();
@@ -176,7 +179,7 @@ public class MissionsMan {
                     }
                 } catch (IllegalArgumentException ex) {
                     JFrame frame = new JFrame();
-                    JOptionPane.showMessageDialog(frame,"Argument must be number.");
+                    JOptionPane.showMessageDialog(frame,bundle.getString("e_ArgumentNumber"));
                     ex.printStackTrace();
                 }
 
@@ -193,7 +196,8 @@ public class MissionsMan {
                 {
                     missionsModel.deleteMission(0);
                 }
-                for (Mission mission : manager.getMissionsOfType(MissionType.valueOf(comboBox8.getSelectedItem().toString()))) {
+				MissionType type = MissionType.valueOf(Shared.getEnumStringFromTranslatedValue(missionTypeSelect.getSelectedItem().toString()));
+                for (Mission mission : manager.getMissionsOfType(type)) {
                     missionsModel.createMission(mission);
                 }
             }

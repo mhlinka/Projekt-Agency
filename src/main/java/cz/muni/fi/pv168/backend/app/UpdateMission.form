@@ -26,7 +26,7 @@
               <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="End date"/>
+              <text resource-bundle="AppAddMission" key="EndDate"/>
             </properties>
           </component>
           <component id="40091" class="javax.swing.JButton" binding="updateButton" default-binding="true">
@@ -34,7 +34,7 @@
               <grid row="5" column="0" row-span="1" col-span="8" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Update"/>
+              <text resource-bundle="AppAddMission" key="Update"/>
             </properties>
           </component>
           <hspacer id="c8fd3">
@@ -52,7 +52,7 @@
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Start date"/>
+              <text resource-bundle="AppAddMission" key="StartDate"/>
             </properties>
           </component>
           <component id="5c33e" class="javax.swing.JLabel">
@@ -60,7 +60,7 @@
               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Month"/>
+              <text resource-bundle="AppAddMission" key="Month"/>
             </properties>
           </component>
           <component id="c94a2" class="javax.swing.JLabel">
@@ -68,7 +68,7 @@
               <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Day"/>
+              <text resource-bundle="AppAddMission" key="Day"/>
             </properties>
           </component>
           <component id="68a9c" class="javax.swing.JLabel">
@@ -76,7 +76,7 @@
               <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Year"/>
+              <text resource-bundle="AppAddMission" key="Year"/>
             </properties>
           </component>
           <component id="de258" class="javax.swing.JComboBox" binding="comboBox1">
@@ -210,7 +210,7 @@
               <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Day"/>
+              <text resource-bundle="AppAddMission" key="Month"/>
             </properties>
           </component>
           <component id="9a006" class="javax.swing.JLabel">
@@ -218,7 +218,7 @@
               <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Year"/>
+              <text resource-bundle="AppAddMission" key="Year"/>
             </properties>
           </component>
           <component id="8d565" class="javax.swing.JComboBox" binding="comboBox4">
@@ -346,20 +346,15 @@
               <grid row="1" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Mission Type"/>
+              <text resource-bundle="AppAddMission" key="MissionType"/>
             </properties>
           </component>
-          <component id="fbc86" class="javax.swing.JComboBox" binding="comboBox7">
+          <component id="fbc86" class="javax.swing.JComboBox" binding="missionTypeSelect">
             <constraints>
               <grid row="2" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <model>
-                <item value="ASSASSINATION"/>
-                <item value="SABOTAGE"/>
-                <item value="SURVEILLANCE"/>
-                <item value="ABDUCTION"/>
-              </model>
+              <model/>
             </properties>
           </component>
           <hspacer id="4af61">

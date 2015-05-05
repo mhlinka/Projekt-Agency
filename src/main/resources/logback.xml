@@ -1,0 +1,24 @@
+<configuration>
+    <appender name="APP" class="ch.qos.logback.core.FileAppender">
+        <file>C:/Users/FH/Desktop/debug.log</file>
+        <encoder>
+            <pattern>%d [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!-- naše vlastní třídy -->
+    <logger name="cz.muni.fi.pv168.backend.entities.AgencyManagerImpl" level="debug"/>
+    <logger name="cz.muni.fi.pv168.backend.entities.SpyManagerImpl" level="debug"/>
+    <logger name="cz.muni.fi.pv168.backend.entities.MissionManagerImpl" level="debug"/>
+
+    <!-- transakce -->
+    <logger name="corg.springframework.transaction" level="debug"/>
+    <logger name="org.springframework.jdbc.datasource.DataSourceTransactionManager" level="debug" />
+    <!-- SQL příkazy -->
+    <logger name="org.springframework.jdbc.core" level="debug"/>
+    <!-- nastavování hodnot v PreparedStatementech -->
+    <logger name="org.springframework.jdbc.core.StatementCreatorUtils" level="trace"/>
+
+    <root level="info">
+        <appender-ref ref="APP"/>
+    </root>
+</configuration>

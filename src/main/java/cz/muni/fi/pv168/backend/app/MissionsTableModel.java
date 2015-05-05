@@ -8,15 +8,18 @@ import org.slf4j.LoggerFactory;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Created by Michal on 5/2/2015.
  */
 public class MissionsTableModel extends AbstractTableModel {
 
-    private List<Mission> missions = new ArrayList<Mission>();
+    private List<Mission> missions = new ArrayList<>();
     private static Logger log = LoggerFactory.getLogger(MissionsTableModel.class);
-
+	private static ResourceBundle bundle = ResourceBundle.getBundle("AppGeneral", Locale.getDefault());
+	ResourceBundle enumValues = ResourceBundle.getBundle("MissionTypes",Locale.getDefault());
     @Override
     public int getRowCount() {
         return missions.size();
@@ -38,7 +41,7 @@ public class MissionsTableModel extends AbstractTableModel {
             case 2:
                 return mission.getEndDate();
             case 3:
-                return mission.getType();
+                return enumValues.getString(mission.getType().toString());
             default:
                 throw new IllegalArgumentException("columnIndex");
         }
@@ -62,13 +65,13 @@ public class MissionsTableModel extends AbstractTableModel {
     public String getColumnName(int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return "Id";
+                return bundle.getString("Id");
             case 1:
-                return "Start date";
+                return bundle.getString("StartDate");
             case 2:
-                return "End date";
+                return bundle.getString("EndDate");
             case 3:
-                return "Mission type";
+                return bundle.getString("MissionType");
             default:
                 throw new IllegalArgumentException("columnIndex");
         }
@@ -103,7 +106,7 @@ public class MissionsTableModel extends AbstractTableModel {
                 mission.setEndDate((java.sql.Date) aValue);
                 break;
             case 3:
-                mission.setType((MissionType) aValue);
+                mission.setType(MissionType.valueOf(Shared.getEnumStringFromTranslatedValue(aValue.toString())));
                 break;
             default:
                 throw new IllegalArgumentException("columnIndex");

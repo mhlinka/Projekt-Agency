@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Created by Michal on 5/5/2015.
@@ -24,28 +26,28 @@ public class AddMission {
     private JComboBox comboBox1;
     private JComboBox comboBox2;
     private JComboBox comboBox3;
-    private JComboBox comboBox7;
+    private JComboBox missionTypeSelect;
 
     public JPanel getTopPanel() {
         return topPanel;
     }
 
     private MissionManager manager;
-
+	public static ResourceBundle bundle = ResourceBundle.getBundle("AppAddMission", Locale.getDefault());
     public AddMission(Mission mission, MissionsTableModel model, JFrame iFrame) {
         BasicDataSource ds = new BasicDataSource();
         ds.setUrl("jdbc:derby:memory:agencydb-test;create=true");
         manager = new MissionManagerImpl(ds);
-
+		Shared.AddMissionTypes(missionTypeSelect);
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame2 = new JFrame();
-                Object[] options = {"Yes",
-                        "No"};
+                Object[] options = {bundle.getString("Yes"),
+                        bundle.getString("No")};
                 int n = JOptionPane.showOptionDialog(frame2,
-                        "Create mission?",
-                        "Create mission",
+                        bundle.getString("CreateMissionQuestion"),
+                        bundle.getString("CreateMission"),
                         JOptionPane.YES_OPTION,
                         JOptionPane.NO_OPTION,
                         null,
@@ -73,7 +75,7 @@ public class AddMission {
                     if (sqlDateStart.after(sqlDateEnd))
                     {
                         JFrame frame = new JFrame();
-                        JOptionPane.showMessageDialog(frame,"Mission can not start after it has already ended.");
+                        JOptionPane.showMessageDialog(frame,bundle.getString("e_StartAfterEnd"));
                         return;
                     }
 
@@ -82,7 +84,7 @@ public class AddMission {
                 } catch (ParseException e1) {
                     e1.printStackTrace();
                 }
-                mission.setType(MissionType.valueOf(comboBox7.getSelectedItem().toString()));
+                mission.setType(MissionType.valueOf(missionTypeSelect.getSelectedItem().toString()));
 
                 manager.createMission(mission);
                 model.createMission(mission);

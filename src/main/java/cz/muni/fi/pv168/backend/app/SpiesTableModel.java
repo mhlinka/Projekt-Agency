@@ -7,15 +7,17 @@ import org.slf4j.LoggerFactory;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Created by Michal on 5/2/2015.
  */
 public class SpiesTableModel extends AbstractTableModel {
 
-    private List<Spy> spies = new ArrayList<Spy>();
+    private List<Spy> spies = new ArrayList<>();
     private static Logger log = LoggerFactory.getLogger(SpiesTableModel.class);
-
+	private static ResourceBundle bundle = ResourceBundle.getBundle("AppGeneral", Locale.getDefault());
     @Override
     public int getRowCount() {
         return spies.size();
@@ -63,15 +65,15 @@ public class SpiesTableModel extends AbstractTableModel {
     public String getColumnName(int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return "Id";
+                return bundle.getString("Id");
             case 1:
-                return "First name";
+                return bundle.getString("FirstName");
             case 2:
-                return "Last name";
+                return bundle.getString("LastName");
             case 3:
-                return "Date of birth";
+                return bundle.getString("DateOfBirth");
             case 4:
-                return "Codename";
+                return bundle.getString("Codename");
             default:
                 throw new IllegalArgumentException("columnIndex");
         }

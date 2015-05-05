@@ -5,5 +5,5 @@ package cz.muni.fi.pv168.backend.entities;
  */
 public enum MissionType
 {
-	ASSASSINATION, SABOTAGE, ABDUCTION, SURVEILLANCE
+	ASSASSINATION, SABOTAGE, ABDUCTION, SURVEILLANCE, UNSPECIFIED
 }

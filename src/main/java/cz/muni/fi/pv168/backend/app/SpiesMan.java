@@ -10,6 +10,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Created by Michal on 5/2/2015.
@@ -34,7 +36,7 @@ public class SpiesMan {
     private SpyManager manager;
     private AgencyManager agencyManager;
     private static Logger log = LoggerFactory.getLogger(SpyApp.class);
-
+	private static ResourceBundle bundle = ResourceBundle.getBundle("SpyMan", Locale.getDefault());
     public SpiesMan() {
         table1.setModel(new SpiesTableModel());
         table1.setDefaultRenderer(Color.class, new ColorCellRenderer());
@@ -81,7 +83,7 @@ public class SpiesMan {
                 log.debug("addSpyToMissionButton({})");
                 if (table1.getSelectedRowCount() != 1) {
                     JFrame frame = new JFrame();
-                    JOptionPane.showMessageDialog(frame, "You must select one spy.");
+                    JOptionPane.showMessageDialog(frame, bundle.getString("e_MustSelectOne"));
                     return;
                 }
                 int row = table1.getSelectedRow();
@@ -89,13 +91,13 @@ public class SpiesMan {
                 if(!agencyManager.listUnassignedSpies().contains(spy))
                 {
                     JFrame frame = new JFrame();
-                    JOptionPane.showMessageDialog(frame, "This spy is already assigned to a mission.");
+                    JOptionPane.showMessageDialog(frame, bundle.getString("e_AlreadyAssigned"));
                     return;
                 }
                 JFrame iFrame = new JFrame();
-                iFrame.setTitle("Add spy to mission");
-                iFrame.add(new MissionTable("add", spy, spiesModel, iFrame, table1).getTopPanel());
-                iFrame.setContentPane(new MissionTable("add", spy, spiesModel, iFrame, table1).getTopPanel());
+                iFrame.setTitle(bundle.getString("AddToMission"));
+                iFrame.add(new MissionTable(bundle.getString("Add"), spy, spiesModel, iFrame, table1).getTopPanel());
+                iFrame.setContentPane(new MissionTable(bundle.getString("Add"), spy, spiesModel, iFrame, table1).getTopPanel());
                 iFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
                 iFrame.setPreferredSize(new Dimension(600, 400));
 
@@ -110,15 +112,15 @@ public class SpiesMan {
                 log.debug("removeSpyButton({})");
                 if (table1.getSelectedRowCount() == 0) {
                     JFrame frame = new JFrame();
-                    JOptionPane.showMessageDialog(frame, "You must select at least one spy.");
+                    JOptionPane.showMessageDialog(frame, bundle.getString("e_MustSelectOne"));
                     return;
                 }
                 JFrame frame = new JFrame();
-                Object[] options = {"Yes",
-                        "No"};
+                Object[] options = {bundle.getString("Yes"),
+                        bundle.getString("No")};
                 int n = JOptionPane.showOptionDialog(frame,
-                        "Do you really want to remove these spies?",
-                        "Spy removal",
+                        bundle.getString("ReallyRemove"),
+                        bundle.getString("SpyRemoval"),
                         JOptionPane.YES_OPTION,
                         JOptionPane.NO_OPTION,
                         null,
@@ -146,7 +148,7 @@ public class SpiesMan {
                 log.debug("removeSpyFromMissionButton({})");
                 if (table1.getSelectedRowCount() != 1) {
                     JFrame frame = new JFrame();
-                    JOptionPane.showMessageDialog(frame, "You must select one spy.");
+                    JOptionPane.showMessageDialog(frame, bundle.getString("e_MustSelectOne"));
                     return;
                 }
                 int row = table1.getSelectedRow();
@@ -154,15 +156,15 @@ public class SpiesMan {
                 Mission mission = agencyManager.findMissionWithSpy(spy2);
                 if (mission == null) {
                     JFrame frame = new JFrame();
-                    JOptionPane.showMessageDialog(frame, "This spy is assigned to no mission.");
+                    JOptionPane.showMessageDialog(frame, bundle.getString("e_NotAssigned"));
                     return;
                 }
                 JFrame frame = new JFrame();
-                Object[] options = {"Yes",
-                        "No"};
+                Object[] options = {bundle.getString("Yes"),
+                        bundle.getString("No")};
                 int n = JOptionPane.showOptionDialog(frame,
-                        "Continue?",
-                        "Remove spy from mission",
+                        bundle.getString("Continue"),
+                        bundle.getString("RemoveFromMission"),
                         JOptionPane.YES_OPTION,
                         JOptionPane.NO_OPTION,
                         null,
@@ -186,13 +188,13 @@ public class SpiesMan {
                 int count = table1.getSelectedRowCount();
                 if(count != 1)
                 {
-                    JOptionPane.showMessageDialog(frame,"You need to select one spy");
+                    JOptionPane.showMessageDialog(frame,bundle.getString("e_MustSelectOne"));
                     return;
                 }
                 int row = table1.getSelectedRow();
                 Spy spy = manager.findSpyById((Long) table1.getValueAt(row, 0));
                 JFrame iFrame = new JFrame();
-                iFrame.setTitle("Update spy");
+                iFrame.setTitle(bundle.getString("UpdateSpy"));
                 iFrame.add(new UpdateSpy(spy,spiesModel,iFrame, table1).getTopPanel());
                 iFrame.setContentPane(new UpdateSpy(spy,spiesModel,iFrame,table1).getTopPanel());
                 iFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -211,14 +213,14 @@ public class SpiesMan {
                     if(textField1.getText().equals(""))
                     {
                         JFrame frame = new JFrame();
-                        JOptionPane.showMessageDialog(frame,"The field next to 'Find Spy by ID' must be filled.");
+                        JOptionPane.showMessageDialog(frame,bundle.getString("e_SpyIdNotFilled"));
                         return;
                     }
                     Long id = Long.parseLong(textField1.getText());
                     Spy spy = manager.findSpyById(id);
                     if (spy == null) {
                         JFrame frame = new JFrame();
-                        JOptionPane.showMessageDialog(frame, "No spy with this ID in database.");
+                        JOptionPane.showMessageDialog(frame, bundle.getString("e_NoSuchSpy"));
                         return;
                     } else {
                         clearAll();
@@ -230,7 +232,7 @@ public class SpiesMan {
                     }
                 } catch (IllegalArgumentException ex) {
                 JFrame frame = new JFrame();
-                JOptionPane.showMessageDialog(frame,"Argument must be number.");
+                JOptionPane.showMessageDialog(frame,bundle.getString("e_ArgumentNonNumber"));
                 ex.printStackTrace();
             }
 
@@ -257,7 +259,7 @@ public class SpiesMan {
             public void actionPerformed(ActionEvent e) {
                 log.debug("showSpiesOnMissionButton({})");
                 JFrame iFrame = new JFrame();
-                iFrame.setTitle("Show spies on mission");
+                iFrame.setTitle(bundle.getString("ShowSpiesOnMission"));
                 iFrame.add(new MissionTable("show",null,spiesModel,iFrame, table1).getTopPanel());
                 iFrame.setContentPane(new MissionTable("show",null,spiesModel,iFrame,table1).getTopPanel());
                 iFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -274,7 +276,7 @@ public class SpiesMan {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                JFrame frame = new JFrame("spies");
+                JFrame frame = new JFrame(bundle.getString("Spies"));
                 frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                 frame.setContentPane(new SpiesMan().topPanel);
                 frame.setPreferredSize(new Dimension(800, 600));

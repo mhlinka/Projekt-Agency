@@ -30,12 +30,12 @@ public class MissionServlet extends HttpServlet
 	private static final Logger log = LoggerFactory.getLogger(MissionServlet.class);
 	private static final String SPIES_ON_MISSION_JSP = "/spiesonmission.jsp";
 
-	public static  final ResourceBundle errors = ResourceBundle.getBundle("StringsWebErrorDialogs",Locale.getDefault());
+	public static  final ResourceBundle errors = ResourceBundle.getBundle("StringsWebErrorDialogs", Locale.getDefault());
 	private static final List<String> VALID_ENUMS = new ArrayList<>(Arrays.asList("ASSASSINATION", "ABDUCTION", "SURVEILLANCE", "SABOTAGE", "UNSPECIFIED"));
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
-		Utility.fillRequestWithBundle("Strings",request);
+		Utility.fillRequestWithBundle("Strings", request);
 		Utility.fillRequestWithBundle("MissionTypes", request);
 		showMissionList(request, response);
 	}
@@ -120,7 +120,7 @@ public class MissionServlet extends HttpServlet
 		String startDateStr = request.getParameter("startDate");
 		String endDateStr = request.getParameter("endDate");
 		String missionTypeStr = request.getParameter("missionType");
-		missionTypeStr = getEnumStringFromTranslatedValue(missionTypeStr);
+		missionTypeStr = Utility.getEnumStringFromTranslatedValue(missionTypeStr);
 
 		if (areNullOrEmpty(new ArrayList<>(Arrays.asList(startDateStr, endDateStr, missionTypeStr))))
 		{
@@ -167,19 +167,7 @@ public class MissionServlet extends HttpServlet
 		}
 	}
 
-	private String getEnumStringFromTranslatedValue(String missionTypeStr)
-	{
-		Locale locale = Locale.getDefault();
-		ResourceBundle enums = ResourceBundle.getBundle("MissionTypes",locale);
-		for(String key:enums.keySet())
-		{
-			if(enums.getString(key).equals(missionTypeStr))
-			{
-				return key;
-			}
-		}
-		return null;
-	}
+
 
 	private void doListSpiesOnMission(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
@@ -210,7 +198,7 @@ public class MissionServlet extends HttpServlet
 				startDateStr = request.getParameter("startDate");
 				endDateStr = request.getParameter("endDate");
 				missionTypeStr = request.getParameter("missionType");
-				missionTypeStr = getEnumStringFromTranslatedValue(missionTypeStr);
+				missionTypeStr = Utility.getEnumStringFromTranslatedValue(missionTypeStr);
 				Long id = Long.valueOf(request.getParameter("id"));
 				try
 				{

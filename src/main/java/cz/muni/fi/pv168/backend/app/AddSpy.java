@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Created by Michal on 5/5/2015.
@@ -29,7 +31,7 @@ public class AddSpy {
     }
 
     private SpyManager manager;
-
+	public static ResourceBundle bundle = ResourceBundle.getBundle("AppAddSpy", Locale.getDefault());
     public AddSpy(Spy spy, SpiesTableModel spiesModel, JFrame iFrame) {
         BasicDataSource ds = new BasicDataSource();
         ds.setUrl("jdbc:derby:memory:agencydb-test;create=true");
@@ -40,15 +42,15 @@ public class AddSpy {
             public void actionPerformed(ActionEvent e) {
                 if (textField1.getText().equals("") || textField3.getText().equals("") || textField4.getText().equals("")) {
                     JFrame frame = new JFrame();
-                    JOptionPane.showMessageDialog(frame, "The fields 'First name', 'Last name', 'Codename' must be filled.");
+                    JOptionPane.showMessageDialog(frame, bundle.getString("FieldsMustBeFilledIn"));
                     return;
                 }
                 JFrame frame2 = new JFrame();
-                Object[] options = {"Yes",
-                        "No"};
+                Object[] options = {bundle.getString("Yes"),
+                        bundle.getString("No")};
                 int n = JOptionPane.showOptionDialog(frame2,
-                        "Do you really want to add this spy?",
-                        "Add spy",
+                        bundle.getString("ReallyAdd"),
+						bundle.getString("AddSpy"),
                         JOptionPane.YES_OPTION,
                         JOptionPane.NO_OPTION,
                         null,
