@@ -2,6 +2,8 @@ package cz.muni.fi.pv168.web;
 
 import cz.muni.fi.pv168.backend.entities.*;
 import cz.muni.fi.pv168.backend.ex.IllegalEntityException;
+import cz.muni.fi.pv168.web.vm.MissionViewModel;
+import cz.muni.fi.pv168.web.vm.SpyViewModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,19 +26,25 @@ public class SpyServlet extends HttpServlet
 	public static final String URL_MAPPING = "/spies/*";
 	public static final String SPY_TO_MISSION = "/spytomission.jsp";
 
+	public static  final ResourceBundle errors = ResourceBundle.getBundle("StringsWebErrorDialogs",Locale.getDefault());
 	private static final Logger log = LoggerFactory.getLogger(MissionServlet.class);
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
+
 		request.setCharacterEncoding("UTF-8");
+		Utility.fillRequestWithBundle("Strings", request);
 		showSpyList(request, response);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		ResourceBundle errorsBundle = ResourceBundle.getBundle("StringsWebErrorDialogs",Locale.getDefault());
+
 		request.setCharacterEncoding("UTF-8");
+		Utility.fillRequestWithBundle("Strings", request);
 		String action = request.getPathInfo();
 		System.out.println("action = " + action);
 		switch (action)
@@ -89,7 +97,7 @@ public class SpyServlet extends HttpServlet
 		String codename = request.getParameter("codename");
 		if (areNullOrEmpty(new ArrayList<>(Arrays.asList(firstName, lastName, dateOfBirthStr, codename))))
 		{
-			request.setAttribute("error", "Some of the values were not filled in.");
+			request.setAttribute("error", errors.getString("e_ValueNotFilledIn"));
 			showSpyList(request, response);
 			return;
 		}
@@ -108,7 +116,7 @@ public class SpyServlet extends HttpServlet
 			}
 			catch (ParseException ex)
 			{
-				request.setAttribute("error", "Date of birth is incorrectly formatted.");
+				request.setAttribute("error", errors.getString("e_DateOfBirthIncorrect"));
 				showSpyList(request, response);
 				return;
 			}
@@ -135,13 +143,13 @@ public class SpyServlet extends HttpServlet
 			}
 			catch(IllegalEntityException ex)
 			{
-				request.setAttribute("error", "Something went wrong while cancelling the mission.");
+				request.setAttribute("error", errors.getString("e_CancelMissionFailed"));
 			}
 		}
 		catch(NumberFormatException ex)
 		{
 			//this can happen if the url is manually entered with invalid values, not by clicking the link.
-			request.setAttribute("error", "Couldn't remove spy from mission, ID was invalid.");
+			request.setAttribute("error", errors.getString("e_RemoveSpyFromMissionFailed"));
 		}
 	}
 
@@ -156,7 +164,12 @@ public class SpyServlet extends HttpServlet
 				Long spyId = Long.valueOf(request.getParameter("spyId"));
 				Long missionId = Long.parseLong(request.getParameter("missionId"));
 
-				request.setAttribute("missions", getMissionManager().getAllMissions());
+				List<MissionViewModel> missions = new ArrayList<>();
+				for (Mission mission : getMissionManager().getAllMissions())
+				{
+					missions.add(MissionViewModel.fromMission(mission));
+				}
+				request.setAttribute("missions", missions);
 
 				Spy spy = getSpyManager().findSpyById(spyId);
 				Mission mission = getMissionManager().getMissionById(missionId);
@@ -166,16 +179,16 @@ public class SpyServlet extends HttpServlet
 				}
 				catch (IllegalEntityException ex)
 				{
-					request.setAttribute("error", "There is no such mission, or the agent is already assigned.");
+					request.setAttribute("error", errors.getString("e_NoSuchMission"));
 					request.getRequestDispatcher(SPY_TO_MISSION).forward(request, response);
 					return;
 				}
-				request.setAttribute("success", "Nothing went wrong for once! (probably)");
+				request.setAttribute("success", errors.getString("s_NothingWrong"));
 				showSpyList(request,response);
 			}
 			catch (NumberFormatException ex)
 			{
-				request.setAttribute("error", "Something went wrong.");
+				request.setAttribute("error", errors.getString("e_SomethingWrong"));
 				request.getRequestDispatcher(SPY_TO_MISSION).forward(request, response);
 				return;
 			}
@@ -186,7 +199,12 @@ public class SpyServlet extends HttpServlet
 			System.out.println("spyId = " + id);
 			try
 			{
-				request.setAttribute("missions", getMissionManager().getAllMissions());
+				List<MissionViewModel> missions = new ArrayList<>();
+				for (Mission mission : getMissionManager().getAllMissions())
+				{
+					missions.add(MissionViewModel.fromMission(mission));
+				}
+				request.setAttribute("missions", missions);
 			}
 			catch (IllegalEntityException ex)
 			{
@@ -201,7 +219,7 @@ public class SpyServlet extends HttpServlet
 
 	private boolean areNullOrEmpty(List<String> params)
 	{
-		return params.stream().allMatch(p -> p == null || p.isEmpty());
+		return params.stream().anyMatch(p -> p == null || p.isEmpty());
 	}
 
 	private void doUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -235,7 +253,7 @@ public class SpyServlet extends HttpServlet
 					}
 					catch (ParseException ex)
 					{
-						request.setAttribute("error", "Date of birth is incorrectly formatted.");
+						request.setAttribute("error", errors.getString("e_DateOfBirthIncorrect"));
 						showSpyList(request, response);
 						return;
 					}
@@ -278,14 +296,19 @@ public class SpyServlet extends HttpServlet
 		try
 		{
 			List<Spy> spies = getSpyManager().listSpies();
-			List<Spy> assignedSpies = new ArrayList<>();
-			List<Spy> unassignedSpies = getAgencyManager().listUnassignedSpies();
+			List<Spy> unassigned = getAgencyManager().listUnassignedSpies();
+			List<SpyViewModel> assignedSpies = new ArrayList<>();
+			List<SpyViewModel> unassignedSpies = new ArrayList<>();
 
 			for (Spy spy : spies)
 			{
-				if (!unassignedSpies.contains(spy))
+				if (unassigned.contains(spy))
 				{
-					assignedSpies.add(spy);
+					unassignedSpies.add(SpyViewModel.fromSpy(spy));
+				}
+				else
+				{
+					assignedSpies.add(SpyViewModel.fromSpy(spy));
 				}
 			}
 			request.setAttribute("assignedSpies", assignedSpies);

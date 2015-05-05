@@ -25,7 +25,7 @@ public class Mission
 	@Override
 	public int hashCode()
 	{
-		int result = Long.valueOf(missionId).hashCode();
+		int result = missionId.hashCode();
 		result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
 		result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
 		result = 31 * result + (type != null ? type.hashCode() : 0);

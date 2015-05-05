@@ -3,15 +3,15 @@
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-10">
-        <h3>Listing</h3>
+        <h3>${web_MissionsTableTitle}</h3>
         <table class="table table-striped table-hover ">
             <thead>
             <tr>
-                <th>#</th>
-                <th>Type</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Actions</th>
+                <th>${web_IdColumnTitle}</th>
+                <th>${web_mission_TypeColumnTitle}</th>
+                <th>${web_mission_StartDateColumnTitle}</th>
+                <th>${web_mission_EndDateColumnTitle}</th>
+                <th>${web_ActionsColumnTitle}</th>
             </tr>
             </thead>
             <tbody>
@@ -26,15 +26,15 @@
                     <td>
                         <form style="display:inline" method="post"
                               action="${pageContext.request.contextPath}/missions/update?id=${mission.missionId}">
-                            <input type="submit" value="Update" class="btn-link"></form>
+                            <input type="submit" value="${web_UpdateButtonText}" class="btn-link"></form>
                         |
                         <form style="display:inline" method="post"
                               action="${pageContext.request.contextPath}/missions/delete?id=${mission.missionId}">
-                            <input type="submit" value="Delete" class="btn-link"></form>
+                            <input type="submit" value="${web_DeleteButtonText}" class="btn-link"></form>
                         |
                         <form style="display:inline" method="post"
                               action="${pageContext.request.contextPath}/missions/listspies?missionId=${mission.missionId}">
-                            <input type="submit" value="Show spies" class="btn-link"></form>
+                            <input type="submit" value="${web_mission_ShowSpiesButtonText}" class="btn-link"></form>
 
                     </td>
                 </tr>
@@ -50,39 +50,39 @@
     <div class="col-md-10">
         <form class="form-horizontal" action="${pageContext.request.contextPath}/missions/add" method="post">
     <fieldset>
-        <legend>New Mission</legend>
+        <legend>${web_mission_NewMissionFormTitle}</legend>
         <div class="form-group">
-            <label for="startDate" class="col-md-1 control-label">Start date</label>
+            <label for="startDate" class="col-md-1 control-label">${web_mission_StartDateColumnTitle}</label>
 
             <div class="col-md-5">
-                <input type="date" class="form-control" id="startDate" placeholder="Date" name="startDate"
+                <input type="date" class="form-control" id="startDate" name="startDate"
                        value="<c:out value='${param.startDate}'/>"/>
             </div>
         </div>
         <div class="form-group">
-            <label for="endDate" class="col-md-1 control-label">End date</label>
+            <label for="endDate" class="col-md-1 control-label">${web_mission_EndDateColumnTitle}</label>
 
             <div class="col-md-5">
-                <input type="date" class="form-control" id="endDate" placeholder="Date" name="endDate"
+                <input type="date" class="form-control" id="endDate" name="endDate"
                        value="<c:out value='${param.endDate}'/>"/>
             </div>
         </div>
         <div class="form-group">
-            <label for="select" class="col-md-1 control-label">Type</label>
+            <label for="select" class="col-md-1 control-label">${web_mission_TypeColumnTitle}</label>
 
             <div class="col-md-5" id="select">
                 <select class="form-control" id="missionType" name="missionType">
-                    <option>Assassination</option>
-                    <option>Abduction</option>
-                    <option>Surveillance</option>
-                    <option>Sabotage</option>
-                    <option>Unspecified</option>
+                    <option>${ABDUCTION}</option>
+                    <option>${ASSASSINATION}</option>
+                    <option>${SURVEILLANCE}</option>
+                    <option>${SABOTAGE}</option>
+                    <option>${UNSPECIFIED}</option>
                 </select>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-1">
-                <button type="submit" class="btn btn-primary col-md-offset-1">Submit</button>
+                <button type="submit" class="btn btn-primary col-md-offset-1">${web_SubmitButtonText}</button>
             </div>
         </div>
     </fieldset>
