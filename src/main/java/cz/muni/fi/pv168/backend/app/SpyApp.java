@@ -1,6 +1,6 @@
 package cz.muni.fi.pv168.backend.app;
 
-import cz.muni.fi.pv168.backend.entities.*;
+import cz.muni.fi.pv168.backend.entities.SpyManager;
 import cz.muni.fi.pv168.utils.DBUtils;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
@@ -26,6 +26,7 @@ public class SpyApp {
         ds.setUrl("jdbc:derby:memory:agencydb-test;create=true");
 
         DBUtils.executeSqlScript(ds, SpyManager.class.getResourceAsStream("/tables.sql"));
+        DBUtils.executeSqlScript(ds, SpyManager.class.getResourceAsStream("/test-data.sql"));
 
         tabbedPane1.add("Spy management", new SpiesMan().getTopPanel());
         tabbedPane1.add("Mission management", new MissionsMan().getTopPanel());
