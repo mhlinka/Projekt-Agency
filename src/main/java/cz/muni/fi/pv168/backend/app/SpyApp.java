@@ -3,6 +3,8 @@ package cz.muni.fi.pv168.backend.app;
 import cz.muni.fi.pv168.backend.entities.*;
 import cz.muni.fi.pv168.utils.DBUtils;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +19,7 @@ public class SpyApp {
 
     private JPanel topPanel;
     private JTabbedPane tabbedPane1;
+    private static Logger log = LoggerFactory.getLogger(SpyApp.class);
 
     public SpyApp() throws SQLException {
         BasicDataSource ds = new BasicDataSource();
@@ -32,6 +35,7 @@ public class SpyApp {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
+                log.debug("SpyApp start({})");
                 JFrame frame = new JFrame("SpyApp");
                 frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -51,6 +55,7 @@ public class SpyApp {
     }
 
     private static JMenuBar createMenu() {
+        log.debug("createMenu({})");
         JMenuBar menubar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
         final JMenu helpMenu = new JMenu("Help");
