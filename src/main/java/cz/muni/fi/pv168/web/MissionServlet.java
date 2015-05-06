@@ -108,7 +108,7 @@ public class MissionServlet extends HttpServlet
 		{
 			for (Mission mission : getMissionManager().getAllMissions())
 			{
-				String searchingIn = mission.getStartDate() + " " + mission.getEndDate() + " " + mission.getType();
+				String searchingIn = mission.getMissionId() + " " + mission.getStartDate() + " " + mission.getEndDate() + " " + mission.getType();
 				searchingIn += types.getString(mission.getType().toString());
 				if (Utility.removeHackyCarky(searchingIn.toLowerCase()).contains(searchingFor.toLowerCase()))
 				{
