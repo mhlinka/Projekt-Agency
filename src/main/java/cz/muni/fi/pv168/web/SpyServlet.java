@@ -26,23 +26,21 @@ public class SpyServlet extends HttpServlet
 	public static final String URL_MAPPING = "/spies/*";
 	public static final String SPY_TO_MISSION = "/spytomission.jsp";
 
-	public static  final ResourceBundle errors = ResourceBundle.getBundle("StringsWebErrorDialogs",Locale.getDefault());
+	public static final ResourceBundle errors = ResourceBundle.getBundle("StringsWebErrorDialogs", Locale.getDefault());
 	private static final Logger log = LoggerFactory.getLogger(MissionServlet.class);
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
-
 		request.setCharacterEncoding("UTF-8");
 		Utility.fillRequestWithBundle("Strings", request);
+
 		showSpyList(request, response);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		ResourceBundle errorsBundle = ResourceBundle.getBundle("StringsWebErrorDialogs",Locale.getDefault());
-
 		request.setCharacterEncoding("UTF-8");
 		Utility.fillRequestWithBundle("Strings", request);
 		String action = request.getPathInfo();
@@ -64,9 +62,85 @@ public class SpyServlet extends HttpServlet
 			case "/update":
 				doUpdate(request, response);
 				return;
+			case "/search":
+				doSearch(request, response);
+				return;
 			default:
 				log.error("Unknown action " + action);
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Unknown action " + action);
+		}
+	}
+
+	private void showSpyList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		showSpyList(request, response, getSpyManager().listSpies());
+	}
+
+	private void showSpyList(HttpServletRequest request, HttpServletResponse response, List<Spy> spies) throws ServletException, IOException
+	{
+		try
+		{
+			List<Spy> unassigned = getAgencyManager().listUnassignedSpies();
+			List<SpyViewModel> assignedSpies = new ArrayList<>();
+			List<SpyViewModel> unassignedSpies = new ArrayList<>();
+
+			for (Spy spy : spies)
+			{
+				if (unassigned.contains(spy))
+				{
+					unassignedSpies.add(SpyViewModel.fromSpy(spy));
+				}
+				else
+				{
+					assignedSpies.add(SpyViewModel.fromSpy(spy));
+				}
+			}
+			request.setAttribute("assignedSpies", assignedSpies);
+			request.setAttribute("unassignedSpies", unassignedSpies);
+			request.getRequestDispatcher(LIST_JSP).forward(request, response);
+		}
+		catch (IllegalEntityException ex)
+		{
+			log.error("Unable to display spies", ex);
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
+		}
+	}
+
+	private SpyManager getSpyManager()
+	{
+		return (SpyManager) getServletContext().getAttribute("spyManager");
+	}
+
+	private AgencyManager getAgencyManager()
+	{
+		return (AgencyManager) getServletContext().getAttribute("agencyManager");
+	}
+
+	private void doSearch(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+	{
+		String searchingFor = Utility.removeHackyCarky(request.getParameter("s"));
+		System.out.println("action = " + searchingFor);
+		List<Spy> spiesToDisplay = new ArrayList<>();
+
+		if (!searchingFor.equals(""))
+		{
+			for (Spy spy : getSpyManager().listSpies())
+			{
+				String searchingIn = spy.getSpyId() + " " + spy.getFirstName() + " " + spy.getLastName() + " " + spy.getCodename() + " " + spy.getDateOfBirth();
+				if (Utility.removeHackyCarky(searchingIn.toLowerCase()).contains(searchingFor.toLowerCase()))
+				{
+					spiesToDisplay.add(spy);
+				}
+			}
+		}
+		if (!spiesToDisplay.isEmpty())
+		{
+			showSpyList(request, response, spiesToDisplay);
+		}
+		else
+		{
+			request.setAttribute("error", errors.getString("e_NoResults"));
+			showSpyList(request, response);
 		}
 	}
 
@@ -139,14 +213,14 @@ public class SpyServlet extends HttpServlet
 			try
 			{
 				getAgencyManager().removeSpyFromMission(spy, mission);
-				showSpyList(request,response);
+				showSpyList(request, response);
 			}
-			catch(IllegalEntityException ex)
+			catch (IllegalEntityException ex)
 			{
 				request.setAttribute("error", errors.getString("e_CancelMissionFailed"));
 			}
 		}
-		catch(NumberFormatException ex)
+		catch (NumberFormatException ex)
 		{
 			//this can happen if the url is manually entered with invalid values, not by clicking the link.
 			request.setAttribute("error", errors.getString("e_RemoveSpyFromMissionFailed"));
@@ -159,8 +233,6 @@ public class SpyServlet extends HttpServlet
 		{
 			try
 			{
-				System.out.println(request.getParameter("spyId"));
-				System.out.println(request.getParameter("missionId"));
 				Long spyId = Long.valueOf(request.getParameter("spyId"));
 				Long missionId = Long.parseLong(request.getParameter("missionId"));
 
@@ -184,7 +256,7 @@ public class SpyServlet extends HttpServlet
 					return;
 				}
 				request.setAttribute("success", errors.getString("s_NothingWrong"));
-				showSpyList(request,response);
+				showSpyList(request, response);
 			}
 			catch (NumberFormatException ex)
 			{
@@ -196,7 +268,6 @@ public class SpyServlet extends HttpServlet
 		else
 		{
 			Long id = Long.valueOf(request.getParameter("spyId"));
-			System.out.println("spyId = " + id);
 			try
 			{
 				List<MissionViewModel> missions = new ArrayList<>();
@@ -289,46 +360,5 @@ public class SpyServlet extends HttpServlet
 	private MissionManager getMissionManager()
 	{
 		return (MissionManager) getServletContext().getAttribute("missionManager");
-	}
-
-	private void showSpyList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-	{
-		try
-		{
-			List<Spy> spies = getSpyManager().listSpies();
-			List<Spy> unassigned = getAgencyManager().listUnassignedSpies();
-			List<SpyViewModel> assignedSpies = new ArrayList<>();
-			List<SpyViewModel> unassignedSpies = new ArrayList<>();
-
-			for (Spy spy : spies)
-			{
-				if (unassigned.contains(spy))
-				{
-					unassignedSpies.add(SpyViewModel.fromSpy(spy));
-				}
-				else
-				{
-					assignedSpies.add(SpyViewModel.fromSpy(spy));
-				}
-			}
-			request.setAttribute("assignedSpies", assignedSpies);
-			request.setAttribute("unassignedSpies", unassignedSpies);
-			request.getRequestDispatcher(LIST_JSP).forward(request, response);
-		}
-		catch (IllegalEntityException ex)
-		{
-			log.error("Unable to display spies", ex);
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
-		}
-	}
-
-	private SpyManager getSpyManager()
-	{
-		return (SpyManager) getServletContext().getAttribute("spyManager");
-	}
-
-	private AgencyManager getAgencyManager()
-	{
-		return (AgencyManager) getServletContext().getAttribute("agencyManager");
 	}
 }

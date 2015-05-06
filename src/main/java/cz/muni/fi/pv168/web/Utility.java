@@ -1,6 +1,7 @@
 package cz.muni.fi.pv168.web;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.Normalizer;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -33,5 +34,10 @@ public class Utility
 			}
 		}
 		return null;
+	}
+
+	public static String removeHackyCarky(String s)
+	{
+		return Normalizer.normalize(s, Normalizer.Form.NFD).replaceAll("[^\\w\\s\\.]", "");
 	}
 }

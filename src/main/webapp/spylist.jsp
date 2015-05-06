@@ -2,6 +2,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="row">
     <div class="col-md-1"></div>
+    <div class="col-md-5">
+        <form action="${pageContext.request.contextPath}/spies/search" method="POST">
+            <input class="form-control" type="search" name="s">
+            <input type="submit" class="btn-link" value="${web_SearchButton}">
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-1"></div>
     <div class="col-md-10">
         <c:if test="${not empty assignedSpies}">
             <h3>${web_spy_OnMissionTitle}</h3>

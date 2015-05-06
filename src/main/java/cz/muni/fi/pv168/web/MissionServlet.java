@@ -30,8 +30,8 @@ public class MissionServlet extends HttpServlet
 	private static final Logger log = LoggerFactory.getLogger(MissionServlet.class);
 	private static final String SPIES_ON_MISSION_JSP = "/spiesonmission.jsp";
 
-	public static  final ResourceBundle errors = ResourceBundle.getBundle("StringsWebErrorDialogs", Locale.getDefault());
-	private static final List<String> VALID_ENUMS = new ArrayList<>(Arrays.asList("ASSASSINATION", "ABDUCTION", "SURVEILLANCE", "SABOTAGE", "UNSPECIFIED"));
+	private static final ResourceBundle errors = ResourceBundle.getBundle("StringsWebErrorDialogs", Locale.getDefault());
+	private static final ResourceBundle types = ResourceBundle.getBundle("MissionTypes", Locale.getDefault());
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
@@ -60,7 +60,9 @@ public class MissionServlet extends HttpServlet
 			case "/update":
 				doUpdate(request, response);
 				return;
-
+			case "/search":
+				doSearch(request, response);
+				return;
 			default:
 				log.error("Unknown action " + action);
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Unknown action " + action);
@@ -69,10 +71,15 @@ public class MissionServlet extends HttpServlet
 
 	private void showMissionList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		showMissionList(request, response, getMissionManager().getAllMissions());
+	}
+
+	private void showMissionList(HttpServletRequest request, HttpServletResponse response, List<Mission> missionsToDisplay) throws ServletException, IOException
+	{
 		try
 		{
 			List<MissionViewModel> missions = new ArrayList<>();
-			for (Mission mission : getMissionManager().getAllMissions())
+			for (Mission mission : missionsToDisplay)
 			{
 				missions.add(MissionViewModel.fromMission(mission));
 			}
@@ -89,6 +96,35 @@ public class MissionServlet extends HttpServlet
 	private MissionManager getMissionManager()
 	{
 		return (MissionManager) getServletContext().getAttribute("missionManager");
+	}
+
+	private void doSearch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		String searchingFor = Utility.removeHackyCarky(request.getParameter("s"));
+		System.out.println("action = " + searchingFor);
+		List<Mission> missionsToDisplay = new ArrayList<>();
+
+		if (!searchingFor.equals(""))
+		{
+			for (Mission mission : getMissionManager().getAllMissions())
+			{
+				String searchingIn = mission.getStartDate() + " " + mission.getEndDate() + " " + mission.getType();
+				searchingIn += types.getString(mission.getType().toString());
+				if (Utility.removeHackyCarky(searchingIn.toLowerCase()).contains(searchingFor.toLowerCase()))
+				{
+					missionsToDisplay.add(mission);
+				}
+			}
+		}
+		if (!missionsToDisplay.isEmpty())
+		{
+			showMissionList(request, response, missionsToDisplay);
+		}
+		else
+		{
+			request.setAttribute("error", errors.getString("e_NoResults"));
+			showMissionList(request, response);
+		}
 	}
 
 	private boolean areNullOrEmpty(List<String> params)
