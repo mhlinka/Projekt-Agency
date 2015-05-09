@@ -9,9 +9,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Michal on 5/2/2015.
@@ -30,13 +34,70 @@ public class SpiesMan {
     private JButton showSpiesOnMissionButton;
     private JButton addSpyToMissionButton;
     private JButton removeSpyFromMissionButton;
+    private JProgressBar jProgressBar;
+    private JButton jButtonCancel;
 
     private SpiesTableModel spiesModel;
-
     private SpyManager manager;
     private AgencyManager agencyManager;
     private static Logger log = LoggerFactory.getLogger(SpyApp.class);
 	private static ResourceBundle bundle = ResourceBundle.getBundle("SpyMan", Locale.getDefault());
+    private SumSwingWorker sumSwingWorker;
+
+    private PropertyChangeListener progressListener = new PropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (evt.getPropertyName().equals("progress")) {
+                jProgressBar.setValue((Integer) evt.getNewValue());
+            }
+        }
+    };
+
+    private class SumSwingWorker extends SwingWorker<Integer,Integer> {
+        @Override
+        protected Integer doInBackground() throws Exception {
+            int result = 0;
+            for(int i=0; i <= 100; i++) {
+                if (isCancelled()) {
+                    return null;
+                }
+                Thread.sleep(10);
+                result += i;
+                publish(i);
+                setProgress(i);
+            }
+            return result;
+        }
+        @Override
+        protected void done() {
+            addSpyButton.setEnabled(true);
+            removeSpyButton.setEnabled(true);
+            updateSpyButton.setEnabled(true);
+            findSpyByIDButton.setEnabled(true);
+            showAllSpiesButton.setEnabled(true);
+            showUnassignedSpiesButton.setEnabled(true);
+            showSpiesOnMissionButton.setEnabled(true);
+            addSpyToMissionButton.setEnabled(true);
+            removeSpyFromMissionButton.setEnabled(true);
+            jButtonCancel.setEnabled(false);
+            sumSwingWorker = null;
+            if (isCancelled()) {
+                System.out.println("Task cancelled.\n");
+            } else {
+                try {
+                    System.out.println("Result is: " + get() + "\n");
+                } catch (ExecutionException ex) {
+                    System.out.println("Exception thrown in doInBackground(): " + ex.getCause() + "\n");
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException("Operation interrupted (this should never happen)", ex);
+                }
+            }
+        }
+        @Override
+        protected void process(List<Integer> chunks) {
+            System.out.println(chunks.toString() + "");
+        }
+    }
+
     public SpiesMan() {
         table1.setModel(new SpiesTableModel());
         table1.setDefaultRenderer(Color.class, new ColorCellRenderer());
@@ -63,6 +124,12 @@ public class SpiesMan {
         addSpyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (sumSwingWorker != null) {
+                    throw new IllegalStateException("Operation is already in progress");
+                }
+                sumSwingWorker = new SumSwingWorker();
+                sumSwingWorker.addPropertyChangeListener(progressListener);
+                sumSwingWorker.execute();
                 log.debug("addSpyButton({})");
                 Spy spy = new Spy();
                 JFrame iFrame = new JFrame();
@@ -80,6 +147,12 @@ public class SpiesMan {
         addSpyToMissionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (sumSwingWorker != null) {
+                    throw new IllegalStateException("Operation is already in progress");
+                }
+                sumSwingWorker = new SumSwingWorker();
+                sumSwingWorker.addPropertyChangeListener(progressListener);
+                sumSwingWorker.execute();
                 log.debug("addSpyToMissionButton({})");
                 if (table1.getSelectedRowCount() != 1) {
                     JFrame frame = new JFrame();
@@ -109,6 +182,12 @@ public class SpiesMan {
         removeSpyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (sumSwingWorker != null) {
+                    throw new IllegalStateException("Operation is already in progress");
+                }
+                sumSwingWorker = new SumSwingWorker();
+                sumSwingWorker.addPropertyChangeListener(progressListener);
+                sumSwingWorker.execute();
                 log.debug("removeSpyButton({})");
                 if (table1.getSelectedRowCount() == 0) {
                     JFrame frame = new JFrame();
@@ -145,6 +224,12 @@ public class SpiesMan {
         removeSpyFromMissionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (sumSwingWorker != null) {
+                    throw new IllegalStateException("Operation is already in progress");
+                }
+                sumSwingWorker = new SumSwingWorker();
+                sumSwingWorker.addPropertyChangeListener(progressListener);
+                sumSwingWorker.execute();
                 log.debug("removeSpyFromMissionButton({})");
                 if (table1.getSelectedRowCount() != 1) {
                     JFrame frame = new JFrame();
@@ -183,6 +268,12 @@ public class SpiesMan {
         updateSpyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (sumSwingWorker != null) {
+                    throw new IllegalStateException("Operation is already in progress");
+                }
+                sumSwingWorker = new SumSwingWorker();
+                sumSwingWorker.addPropertyChangeListener(progressListener);
+                sumSwingWorker.execute();
                 log.debug("updateSpyButton({})");
                 JFrame frame = new JFrame();
                 int count = table1.getSelectedRowCount();
@@ -208,6 +299,14 @@ public class SpiesMan {
         findSpyByIDButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (sumSwingWorker != null) {
+                    throw new IllegalStateException("Operation is already in progress");
+                }
+                findSpyByIDButton.setEnabled(false);
+                jButtonCancel.setEnabled(true);
+                sumSwingWorker = new SumSwingWorker();
+                sumSwingWorker.addPropertyChangeListener(progressListener);
+                sumSwingWorker.execute();
                 log.debug("findSpyByIDButton({})");
                 try {
                     if(textField1.getText().equals(""))
@@ -243,6 +342,14 @@ public class SpiesMan {
         showAllSpiesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (sumSwingWorker != null) {
+                    throw new IllegalStateException("Operation is already in progress");
+                }
+                showAllSpiesButton.setEnabled(false);
+                jButtonCancel.setEnabled(true);
+                sumSwingWorker = new SumSwingWorker();
+                sumSwingWorker.addPropertyChangeListener(progressListener);
+                sumSwingWorker.execute();
                 log.debug("showAllSpiesButton({})");
                 showAllSpies();
             }
@@ -250,6 +357,14 @@ public class SpiesMan {
         showUnassignedSpiesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (sumSwingWorker != null) {
+                    throw new IllegalStateException("Operation is already in progress");
+                }
+                showUnassignedSpiesButton.setEnabled(false);
+                jButtonCancel.setEnabled(true);
+                sumSwingWorker = new SumSwingWorker();
+                sumSwingWorker.addPropertyChangeListener(progressListener);
+                sumSwingWorker.execute();
                 log.debug("showUnassignedSpiesButton({})");
                 showUnassigned();
             }
@@ -257,6 +372,14 @@ public class SpiesMan {
         showSpiesOnMissionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (sumSwingWorker != null) {
+                    throw new IllegalStateException("Operation is already in progress");
+                }
+                showSpiesOnMissionButton.setEnabled(false);
+                jButtonCancel.setEnabled(true);
+                sumSwingWorker = new SumSwingWorker();
+                sumSwingWorker.addPropertyChangeListener(progressListener);
+                sumSwingWorker.execute();
                 log.debug("showSpiesOnMissionButton({})");
                 JFrame iFrame = new JFrame();
                 iFrame.setTitle(bundle.getString("ShowSpiesOnMission"));
@@ -270,10 +393,20 @@ public class SpiesMan {
                 textField1.setText("");
             }
         });
+        jButtonCancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (sumSwingWorker == null) {
+                    throw new IllegalStateException("Operation is not running");
+                }
+                sumSwingWorker.cancel(false);
+            }
+        });
     }
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
+        //EventQueue.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 JFrame frame = new JFrame(bundle.getString("Spies"));

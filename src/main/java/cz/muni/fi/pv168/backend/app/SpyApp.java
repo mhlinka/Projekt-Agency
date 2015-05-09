@@ -23,23 +23,26 @@ public class SpyApp {
     private JTabbedPane tabbedPane1;
     private static Logger log = LoggerFactory.getLogger(SpyApp.class);
 	private static ResourceBundle bundle = ResourceBundle.getBundle("AppGeneral_sk_SK",Locale.getDefault());
+
     public SpyApp() throws SQLException {
         BasicDataSource ds = new BasicDataSource();
         ds.setUrl("jdbc:derby:memory:agencydb-test;create=true");
 
         DBUtils.executeSqlScript(ds, SpyManager.class.getResourceAsStream("/tables.sql"));
-		Locale.setDefault(new Locale("sk","SK"));
+		Locale.setDefault(new Locale("sk", "SK"));
 		tabbedPane1.add(bundle.getString("SpyManagement"), new SpiesMan().getTopPanel());
         tabbedPane1.add(bundle.getString("MissionManagement"), new MissionsMan().getTopPanel());
     }
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
+        //EventQueue.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 log.debug("SpyApp start({})");
                 JFrame frame = new JFrame("SpyApp");
                 frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                //frame.setDefaultCloseOperation(1);
 
                 try {
                     frame.setContentPane(new SpyApp().topPanel);
@@ -84,5 +87,4 @@ public class SpyApp {
         });
         return menubar;
     }
-
 }
